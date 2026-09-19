@@ -4,25 +4,31 @@
 
 @section('content')
 <div class="row g-3 mb-4">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card stat-card p-3">
             <div class="text-muted small">Categories</div>
             <div class="fs-3 fw-bold">{{ $stats['categories'] }}</div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card stat-card p-3">
             <div class="text-muted small">Menu Items</div>
             <div class="fs-3 fw-bold">{{ $stats['items'] }}</div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card stat-card p-3">
             <div class="text-muted small">Reservations</div>
             <div class="fs-3 fw-bold">{{ $stats['reservations'] }}</div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
+        <div class="card stat-card p-3">
+            <div class="text-muted small">Orders</div>
+            <div class="fs-3 fw-bold">{{ $stats['orders'] }}</div>
+        </div>
+    </div>
+    <div class="col-md-2">
         <div class="card stat-card p-3">
             <div class="text-muted small">Messages</div>
             <div class="fs-3 fw-bold">{{ $stats['messages'] }}</div>

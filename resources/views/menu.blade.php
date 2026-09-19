@@ -213,6 +213,11 @@
             <aside class="shop-cart">
                 <h5 class="cart-heading">Cart Summary <span class="cart-count-badge" id="cartCountBadge">0</span></h5>
 
+                <div class="mb-2">
+                    <input type="text" id="customerName" class="form-control form-control-sm mb-2" placeholder="Your name">
+                    <input type="text" id="customerPhone" class="form-control form-control-sm" placeholder="Phone number">
+                </div>
+
                 <div id="cartItems" class="cart-items">
                     <p class="text-muted small text-center py-4" id="emptyCartMsg">Your cart is empty.</p>
                 </div>
@@ -227,6 +232,7 @@
                 </div>
 
                 <button class="btn-place-order" id="placeOrderBtn">Place an Order</button>
+                <button class="btn btn-outline-secondary w-100 mt-2" id="cancelOrderBtn">Cancel</button>
             </aside>
 
         </div>
@@ -322,9 +328,49 @@
                 alert('Your cart is empty.');
                 return;
             }
-            alert('Order placed! (This demo cart is not yet connected to a backend order system.)');
-            cart = [];
-            renderCart();
+
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+
+            if (!name || !phone) {
+                alert('Please enter your name and phone number.');
+                return;
+            }
+
+            const payload = {
+                customer_name: name,
+                customer_phone: phone,
+                items: cart.map(i => ({
+                    name: i.name,
+                    price: i.price,
+                    qty: i.qty
+                })),
+            };
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch('{{ route("orders.store") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order #' + data.order_id + ' placed! We\'ll have it ready soon.');
+                        cart = [];
+                        document.getElementById('customerName').value = '';
+                        document.getElementById('customerPhone').value = '';
+                        renderCart();
+                    } else {
+                        alert('Something went wrong placing your order.');
+                    }
+                })
+                .catch(() => alert('Something went wrong placing your order.'));
         });
 
         document.getElementById('cancelOrderBtn').addEventListener('click', function() {

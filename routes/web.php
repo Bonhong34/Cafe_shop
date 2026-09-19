@@ -11,6 +11,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
@@ -23,6 +25,9 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 
 Route::get('/reservation', [ReservationController::class, 'index'])->name('reservation');
 Route::post('/reservation', [ReservationController::class, 'store'])->name('reservation.store');
+
+// PUBLIC ORDER ROUTE — moved here, outside the admin group entirely
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
@@ -40,5 +45,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/messages', [ContactMessageController::class, 'index'])->name('messages.index');
         Route::delete('/messages/{message}', [ContactMessageController::class, 'destroy'])->name('messages.destroy');
+
+        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
+        Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
     });
 });

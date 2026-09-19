@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Contact;
 use App\Models\MenuCategory;
 use App\Models\MenuItem;
+use App\Models\Order;
 use App\Models\Reservation;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -18,12 +18,13 @@ class DashboardController extends Controller
             'items' => MenuItem::count(),
             'reservations' => Reservation::count(),
             'messages' => Contact::count(),
-
+            'orders' => Order::count(),
         ];
 
         $recentReservations = Reservation::latest()->take(5)->get();
         $recentMessages = Contact::latest()->take(5)->get();
+        $recentOrders = Order::latest()->take(5)->get();
 
-        return view('admin.dashboard', compact('stats', 'recentReservations', 'recentMessages'));
+        return view('admin.dashboard', compact('stats', 'recentReservations', 'recentMessages', 'recentOrders'));
     }
 }
